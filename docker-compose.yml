@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  db:
+    platform: linux/amd64 # configuration for M1 macs
+    image: mysql:8.0
+    container_name: mysql_db
+    command: [ "--default-authentication-plugin=mysql_native_password" ]
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: product_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: admin
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
